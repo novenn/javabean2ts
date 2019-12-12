@@ -1,8 +1,9 @@
-interface Student {
+interface Student extends Serializable {
     name: string;
     age: string;
     gender: number;
     lala: number;
     is: boolean;
-    SON: son;
+    son: SON[];
+    sons: number[];
 }

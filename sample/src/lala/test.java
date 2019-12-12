@@ -8,8 +8,6 @@ public class Student implements Serializable {
     private float gender;
     private Integer lala;
     private boolean is;
-    private SON[] son;
-    private int[] sons;
 
     // 提供公共无参的构造
     public Student() {
