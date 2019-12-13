@@ -1,7 +1,9 @@
+#!/usr/bin/env node
+
 const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
-const {rmdirRecursive} = require('./utils')
+const {rmdirRecursive} = require('../utils')
 
 function findSuperClassName(content) {
   return content.match(/implements\s+(.*?)\s+/, content)[1]
@@ -112,11 +114,18 @@ function transform(src, dist) {
   
 }
 
-
 function main() {
-  const src = './sample/src'
-  const dist = './sample/dist'
-  transform(path.resolve(src), path.resolve(dist))
+  const program = require('commander');
+  program
+  .option('--no-sauce', 'Remove sauce')
+  .option('--cheese <flavour>', 'cheese flavour', 'mozzarella')
+  .option('--no-cheese', 'plain with no cheese');
+
+  console.log(program.parse(process.argv))
+
+  // const src = './sample/src'
+  // const dist = './sample/dist'
+  // transform(path.resolve(src), path.resolve(dist))
 }
 
 main()
