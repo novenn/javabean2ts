@@ -3,7 +3,7 @@
 const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
-const {rmdirRecursive} = require('../utils')
+const {rmdirRecursive} = require('./utils')
 
 function findSuperClassName(content) {
   return content.match(/implements\s+(.*?)\s+/, content)[1]
@@ -100,7 +100,6 @@ function transform(src, dist) {
   const className = findClassName(content)
   const javaAttrs = findJavaAttributes(content)
   const tsAttrs = getTSAttributes(javaAttrs)
-  console.log(javaAttrs)
 
   let outputContent = `interface ${className} ${superClassName ? 'extends ' + superClassName : ''} {\r\n`
 
@@ -117,15 +116,17 @@ function transform(src, dist) {
 function main() {
   const program = require('commander');
   program
-  .option('--no-sauce', 'Remove sauce')
-  .option('--cheese <flavour>', 'cheese flavour', 'mozzarella')
-  .option('--no-cheese', 'plain with no cheese');
-
-  console.log(program.parse(process.argv))
-
+  .option('-s, --src <string>', 'java directory', '.')
+  .option('-d, --dist <string>', 'output directory', './dist')
+  .option('-r, --recursive')
+  .parse(process.argv)
+ 
+  const opts = program.opts()
+  const src = path.resolve(opts.src)
+  const dist = path.resolve(opts.dist)
   // const src = './sample/src'
   // const dist = './sample/dist'
-  // transform(path.resolve(src), path.resolve(dist))
+  transform(path.resolve(src), path.resolve(dist))
 }
 
 main()
