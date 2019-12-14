@@ -125,14 +125,13 @@ function main() {
   program
   .option('-s, --src <string>', 'java directory', '.')
   .option('-d, --dist <string>', 'output directory', './dist')
-  .option('-r, --recursive')
+  // .option('-r, --recursive')
   .parse(process.argv)
  
   const opts = program.opts()
   const src = path.resolve(opts.src)
   const dist = path.resolve(opts.dist)
-  // const src = './sample/src'
-  // const dist = './sample/dist'
+  
   transform(path.resolve(src), path.resolve(dist))
 }
 

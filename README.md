@@ -8,7 +8,7 @@ utility for transforming java beans to typescript interface
 - support array
 - suuport recursive processing
 
-## using
+## usage
 
 install as a global cli
 >npm install javabean2ts -g
