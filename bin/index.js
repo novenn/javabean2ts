@@ -3,7 +3,7 @@
 const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
-const {rmdirRecursive} = require('./utils')
+const {rmdirRecursive} = require('../utils')
 
 function findSuperClassName(content) {
   const arr = content.match(/implements\s+(.*?)\s+/, content)
@@ -18,8 +18,7 @@ function findClassName(content) {
 function findJavaAttributes(content) {
   const attrs = []
   const attrReg = /(?:public|private)\s+([a-zA-Z]+)(\s*\[\])?\s+([a-zA-z0-9_,\s]+);/
-  const arr = content.match(new RegExp(attrReg, 'g'))
-  arr && arr.forEach(item => {
+  content.match(new RegExp(attrReg, 'g')).forEach(item => {
     const p = attrReg.exec(item).slice(1)
     const type = p[0]
     const isArray = !!p[1]
@@ -100,13 +99,9 @@ function transform(src, dist) {
 
   const superClassName = findSuperClassName(content)
   const className = findClassName(content)
-
-  if(!className) {
-    return console.log(chalk.red(`skip ${src}`))
-  }
-
   const javaAttrs = findJavaAttributes(content)
   const tsAttrs = getTSAttributes(javaAttrs)
+  console.log(javaAttrs)
 
   let outputContent = `interface ${className} ${superClassName ? 'extends ' + superClassName : ''} {\r\n`
 
@@ -123,14 +118,12 @@ function transform(src, dist) {
 function main() {
   const program = require('commander');
   program
-  .option('-s, --src <string>', 'java directory', '.')
-  .option('-d, --dist <string>', 'output directory', './dist')
-  .option('-r, --recursive')
-  .parse(process.argv)
- 
-  const opts = program.opts()
-  const src = path.resolve(opts.src)
-  const dist = path.resolve(opts.dist)
+  .option('--no-sauce', 'Remove sauce')
+  .option('--cheese <flavour>', 'cheese flavour', 'mozzarella')
+  .option('--no-cheese', 'plain with no cheese');
+
+  console.log(program.parse(process.argv))
+
   // const src = './sample/src'
   // const dist = './sample/dist'
   transform(path.resolve(src), path.resolve(dist))
