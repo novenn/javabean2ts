@@ -5,15 +5,12 @@ const path = require('path')
 const chalk = require('chalk')
 const {rmdirRecursive} = require('./utils')
 
-function deleteInnerBlock(content) {
-  var reg = /((public|private)?\s+([a-zA-Z0-9_]+\s*)*(\((.*?)\))\s+{)/g
-  var arr = content.match(reg)
-  console.log(arr)
-  const len = arr.len
-  for(let i=len - 1; i >= 0; i--) {
-    content = content.
-  }
-  return content
+function filterTopCode(content) {
+  const startIndex = content.indexOf('{') + 1
+  const endIndex = content.lastIndexOf('}')
+  content = content.slice(startIndex, endIndex)
+  content = content.replace(/\t|\r|\n|(\r\n)/g, ' ').replace(/[^;]*\{(.*)\}/g, '')
+  return content.replace(/\s+/g, ' ')
 }
 
 function findSuperClassName(content) {
@@ -34,8 +31,9 @@ function findEnumName(content) {
 function findEnumItems(content) {
   // 删除所有方法文本
   // content = content.replace(/(private|public)\s*([a-zA-Z0-9_])\s*(*)/g, '')
-  content = deleteInnerBlock(content)
-  const reg = /([a-zA-Z0-9_]+)(\(.*?\))?(,|;)/
+  content = filterTopCode(content)
+  console.log(content)
+  const reg = /(?!([a-zA-Z_]+\s+))([a-zA-Z0-9_]+)(\(.*?\))?(,|;)/
   const arr = content.match(new RegExp(reg, 'g'))
   arr && arr.forEach(item => {
     const p = reg.exec(item).slice(1)
