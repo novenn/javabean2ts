@@ -3,7 +3,8 @@
 const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
-const {rmdirRecursive} = require('./utils')
+// const {rmdirRecursive} = require('./utils')
+const tokenizer = require('./utils/tokenizer')
 
 function filterTopCode(content) {
   const startIndex = content.indexOf('{') + 1
@@ -16,36 +17,37 @@ function filterTopCode(content) {
 
 function transform(src, dist) {
   // 如果src 是一个目录
-  const stats = fs.statSync(src)
-  if (stats.isDirectory()) {
+  // const stats = fs.statSync(src)
+  // if (stats.isDirectory()) {
 
-    // 如果存在的话 就清空目录
-    if(fs.existsSync(dist)) {
-      rmdirRecursive(dist)
-    }
+  //   // 如果存在的话 就清空目录
+  //   if(fs.existsSync(dist)) {
+  //     rmdirRecursive(dist)
+  //   }
 
-    const nodes = fs.readdirSync(src)
-    nodes.forEach(node => {
-      transform(path.resolve(src, node), path.resolve(dist, node))
-    })
+  //   const nodes = fs.readdirSync(src)
+  //   nodes.forEach(node => {
+  //     transform(path.resolve(src, node), path.resolve(dist, node))
+  //   })
 
-    return false
-  } else if(!/\.java/.test(src)) {
-    return false
-  }
+  //   return false
+  // } else if(!/\.java/.test(src)) {
+  //   return false
+  // }
 
   let content = fs.readFileSync(src, 'utf-8')
 
-  const tokens = tokenizier(content)
-  const lexicales = lexicaler(tokens)
-  const ast = parser(lexicales)
-  const target = complier(ast)
+  const tokens = tokenizer(content)
+  // const lexicales = lexicaler(tokens)
+  // const ast = parser(lexicales)
+  // const target = complier(ast)
+  console.log(tokens)
  
-  console.log(chalk.green(`${src} >>>> ${dist}`))
-  if(!fs.existsSync(path.dirname(dist))) {
-    fs.mkdirSync(path.dirname(dist), {recursive: true})
-  }
-  fs.writeFileSync(dist.replace('.java', '.ts'), target, 'utf-8')
+  // console.log(chalk.green(`${src} >>>> ${dist}`))
+  // if(!fs.existsSync(path.dirname(dist))) {
+  //   fs.mkdirSync(path.dirname(dist), {recursive: true})
+  // }
+  // fs.writeFileSync(dist.replace('.java', '.ts'), target, 'utf-8')
   
 }
 
